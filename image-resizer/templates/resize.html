@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizer</title>
+    <style>
+        @font-face {
+            font-family: Slab;
+            src: url('{{url_for("static", filename="RobotoSlab.ttf")}}');
+        }
+    </style>
+    <link rel="stylesheet" href='{{url_for("static", filename="style.css")}}'>
+</head>
+<body>
+    <nav>
+        <h2>
+            <a href="/">Home</a>
+        </h2>
+        <span>The best image resizer out there</span>
+    </nav>
+    <main>
+        <div class="images-container">
+            <div class="image-container">
+                <h2>Original:</h2>
+                <img id="original-img" src="{{image_url}}" alt="Image">
+            </div>
+    
+            <div class="image-container">
+                <h2>Resized:</h2>
+                <img id="resized-img" src="{{image_url}}" alt="Image">
+            </div>
+        </div>
+        <div>
+            <input type="text" name="image_url" value="{{image_url}}" hidden>
+            <label for="maintain-ratio">
+                Maintain Aspect Ratio:
+                <input type="checkbox" name="maintain-ratio" id="maintain-ratio" checked>
+            </label>
+            <br>
+            <label for="width">
+                Width: &nbsp;
+                <input type="number" name=width id="width" min="0">
+                px
+            </label>
+            <br>
+            <label for="height">
+                Height:&nbsp;
+                <input type="number" name="height" id="height" min="0">
+                px
+            </label>
+            <br>
+            <div class="bottom-buttons-container">
+                <button id="resize-btn">Resize</button>
+                <a id="download-btn" href="{{image_url}}" download>download</a>
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+    const resizeBtn = document.getElementById('resize-btn');
+    resizeBtn.addEventListener('click', resize);
+    
+    const height = document.getElementById('height');
+    const width = document.getElementById('width');
+    const resizedImage = document.getElementById('resized-img');
+    const originalImage = document.getElementById('original-img');
+    const downloadBtn = document.getElementById('download-btn');
+    const maintainRatioBox = document.getElementById('maintain-ratio');
+
+    var aspectRatio = null; 
+
+    resizedImage.addEventListener('load', () => {
+        height.value = resizedImage.naturalHeight;
+        width.value = resizedImage.naturalWidth;
+    });
+
+    originalImage.addEventListener('load', () => {
+        calculateAspectRatio();
+    });
+
+    height.addEventListener('change', (event) => {
+        if(!maintainRatioBox.checked)
+            return;
+    
+        const heightValue = height.valueAsNumber;
+        if (isNaN(heightValue) || aspectRatio == null)
+            return;
+
+        const widthValue = Math.floor(heightValue * aspectRatio);
+        width.value = widthValue;
+    });
+
+    width.addEventListener('change', (event) => {
+        if(!maintainRatioBox.checked)
+            return;
+    
+        const widthValue = width.valueAsNumber;
+        if (isNaN(widthValue) || aspectRatio == null)
+            return;
+
+        const heightValue = Math.floor(widthValue * (1/aspectRatio));
+        height.value = heightValue;
+    });
+
+    function resize() {
+        const newHeight = Math.abs(height.valueAsNumber);
+        const newWidth = Math.abs(width.valueAsNumber);
+        const maintainAspectRatio = maintainRatioBox.checked;
+
+        const resizedImageUrl = new URL(resizedImage.src);
+        if (isNaN(newHeight) == false){
+            resizedImageUrl.searchParams.set('height', newHeight);
+        }
+        else {
+            resizedImageUrl.searchParams.delete('height');
+        }
+
+        if (isNaN(newWidth) == false) {
+            resizedImageUrl.searchParams.set('width', newWidth);
+        } 
+        else {    
+            resizedImageUrl.searchParams.delete('width');
+        }
+
+        console.log(resizedImageUrl.toString());
+        resizedImage.src = resizedImageUrl;
+        downloadBtn.href = resizedImageUrl;
+    }
+
+    function calculateAspectRatio() {
+        // TODO: later
+        // 12/12/2023: will never implement this 🙌👍
+        // 12/12/2023 (minutes later): we're implementing this rn 😂
+        const origHeight = originalImage.naturalHeight;
+        const orgiWidth = originalImage.naturalWidth;        
+        aspectRatio = orgiWidth / origHeight;
+    }
+</script>
+</html>

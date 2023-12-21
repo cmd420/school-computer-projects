@@ -1,0 +1,16 @@
+.file-input-container {
+    display: flex;
+    gap: 1em;
+    margin-block-end: 1em;
+}
+
+.upload-btn {
+
+    font-size: 1.5em;
+    padding: 5px 10px;
+}
+
+.error {
+    color: red;
+    margin-block-end: 1em;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs</title>
+</head>
+<body>
+    <h3>Blogs:</h3>
+    <ol id="blogs"></ol>
+    <hr>
+    <h3>New Blog</h3>
+    <form method="post">
+        <label for="title">
+            Title:
+            <input type="text" name="title" id="title">
+        </label>
+        <br>
+        <label for="content">
+            Content:
+        </label>
+        <br>
+        <textarea name="content" id="content" cols="30" rows="10" placeholder="Your blog here..."></textarea>
+        <br>
+        <input type="submit" value="SUBMIT">
+    </form>
+</body>
+<script>
+    const blogsList = document.getElementById('blogs');
+    function fetchBlogs() {
+        fetch('/blogs')
+            .then(r => r.json())
+            .then(json => {
+                for(const blog of json.blogs) {
+                    const blogItem = document.createElement('li');
+                    const blogUrl = document.createElement('a');
+                    blogUrl.href = blog.url;
+                    blogUrl.textContent = `${blog.title} - ${blog.date}`;
+                    blogItem.appendChild(blogUrl);
+                    blogsList.appendChild(blogItem);
+                }
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchBlogs();
+    });
+</script>
+</html>

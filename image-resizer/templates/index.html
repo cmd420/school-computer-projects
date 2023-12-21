@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <style>
+        @font-face {
+            font-family: Slab;
+            src: url('{{url_for("static", filename="RobotoSlab.ttf")}}');
+        }
+    </style>
+    <link rel="stylesheet" href='{{url_for("static", filename="style.css")}}'>
+</head>
+<body>
+    <nav>
+        <h2>
+            <a href="/">Home</a>
+        </h2>
+        <span>The best image resizer out there</span>
+    </nav>
+    <main>
+        {% if error %}
+            <p style="color: red;">{{error}}</p>
+        {% endif %}
+        <form id="upload-form" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file">
+            <br>
+            <button type="submit">Upload</button>
+        </form>
+    </main>
+</body>
+</html>
